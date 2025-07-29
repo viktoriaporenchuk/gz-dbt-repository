@@ -7,27 +7,25 @@ sources:
         identifier: raw_gz_sales  # ← actual table name in BigQuery
         description: sales of Greenweez / we have on row per product_id found in each orders_id
         columns:
-           - name: date_date
-             description: date of purchase
-       
-
+          - name: date_date
+            description: date of purchase
+          - name: orders_id
+            description: order_id
       - name: product
         identifier: raw_gz_product
         description: products of Greenweez
         columns:
-          - name: product_id
-            description: primary key of the product table
+          - name: products_id
+            description: products_id
             tests:
               - not_null
               - unique
-
       - name: ship
         identifier: raw_gz_ship
-        description: shipping information of Greenweez
+        description: shipment costs
         columns:
           - name: orders_id
-            description: primary key of the ship table
+            description: orders_id
             tests:
               - not_null
               - unique
-
