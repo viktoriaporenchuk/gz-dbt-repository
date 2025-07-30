@@ -4,7 +4,7 @@
 
 WITH adwords AS (
     SELECT
-        date,
+        date_date AS date,
         campaign_id,
         campaign_name,
         CAST(ads_cost AS FLOAT64) AS ads_cost,
@@ -14,7 +14,7 @@ WITH adwords AS (
 
 bing AS (
     SELECT
-        date,
+        date_date AS date,
         campaign_id,
         campaign_name,
         CAST(ads_cost AS FLOAT64) AS ads_cost,
@@ -24,7 +24,7 @@ bing AS (
 
 criteo AS (
     SELECT
-        date,
+        date_date AS date,
         campaign_id,
         campaign_name,
         CAST(ads_cost AS FLOAT64) AS ads_cost,
@@ -34,7 +34,7 @@ criteo AS (
 
 facebook AS (
     SELECT
-        date,
+        date_date AS date,
         campaign_id,
         campaign_name,
         CAST(ads_cost AS FLOAT64) AS ads_cost,
