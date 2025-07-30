@@ -1,0 +1,201 @@
+version: 2
+sources:
+  - name: raw
+    schema: gz_raw_data
+    tables:
+      - name: sales
+        identifier: raw_gz_sales
+        description: sales of Greenweez / we have one row per product_id found in each orders_id
+        loaded_at_field: "CAST(date_date AS TIMESTAMP)"
+        freshness:
+          warn_after: {count: 90, period: day}
+        columns:
+          - name: date_date
+            description: date of purchase
+          - name: orders_id
+            description: unique identifier of the order
+          - name: products_id
+            description: unique identifier of the product purchased
+          - name: revenue
+            description: total revenue generated from this product in this order
+          - name: quantity
+            description: quantity of the product purchased in this order
+          - name: primary_key
+            description: primary key of the table
+        tests:
+            - unique:
+                column_name: "(orders_id || '-' || pdt_id)"
+      - name: product
+        identifier: raw_gz_product
+        description: product catalog of Greenweez / one row per product_id
+        columns:
+          - name: products_id
+            description: unique identifier of the product
+            tests:
+              - not_null
+              - unique
+          - name: purchase_price
+            description: purchase price of the product (cost for Greenweez)
+      - name: ship
+        identifier: raw_gz_ship
+        description: shipping data of Greenweez / one row per orders_id
+        columns:
+          - name: orders_id
+            description: unique identifier of the order
+            tests:
+              - not_null
+              - unique
+          - name: shipping_fee
+            description: fee charged to the customer for shipping
+          - name: logcost
+            description: internal logistics cost for shipping the order
+          - name: ship_cost
+            description: total cost of shipping the order
+models:
+  - name: int_orders_margin
+    description: margin calculation per order
+    columns:
+      - name: orders_id
+        description: unique identifier of the order
+        tests:
+          - not_null
+          - unique
+      - name: date_date
+        description: date of the transaction
+        tests:
+          - not_null
+      - name: revenue
+        description: revenue of the order
+        tests:
+          - not_null
+      - name: quantity
+        description: total quantity purchased in the order
+        tests:
+          - not_null
+      - name: purchase_cost
+        description: total purchase cost of items in the order
+        tests:
+          - not_null
+      - name: margin
+        description: margin calculated as revenue minus purchase cost
+        tests:
+          - not_null
+  - name: int_orders_operational
+    description: operational metrics combining sales and shipping information
+    columns:
+      - name: orders_id
+        description: unique identifier of the order
+        tests:
+          - not_null
+          - unique
+      - name: date_date
+        description: date of the transaction
+        tests:
+          - not_null
+      - name: revenue
+        description: revenue of the order
+        tests:
+          - not_null
+      - name: quantity
+        description: total quantity of items purchased
+        tests:
+          - not_null
+      - name: purchase_cost
+        description: purchase cost of products in the order
+        tests:
+          - not_null
+      - name: margin
+        description: margin calculated from revenue and purchase cost
+        tests:
+          - not_null
+      - name: shipping_fee
+        description: fee charged to the customer for shipping
+        tests:
+          - not_null
+      - name: logcost
+        description: logistics cost associated with the order
+        tests:
+          - not_null
+      - name: ship_cost
+        description: total shipping cost of the order
+        tests:
+          - not_null
+      - name: op_margin
+        description: operational margin (margin minus shipping and logistics costs)
+        tests:
+          - not_null
+  - name: int_sales_margin
+    description: margin calculation at the sales (product) level
+    tests:
+        - unique:
+            column_name: "(orders_id || '-' || products_id)"
+    columns:
+      - name: products_id
+        description: unique identifier of the product
+        tests:
+          - not_null
+      - name: date_date
+        description: date of the transaction
+        tests:
+          - not_null
+      - name: orders_id
+        description: unique identifier of the order
+        tests:
+          - not_null
+      - name: revenue
+        description: revenue generated for the product in the order
+        tests:
+          - not_null
+      - name: quantity
+        description: quantity of the product purchased
+        tests:
+          - not_null
+      - name: purchase_price
+        description: purchase price of the product
+        tests:
+          - not_null
+      - name: purchase_cost
+        description: purchase cost for the quantity purchased (purchase_price * quantity)
+        tests:
+          - not_null
+      - name: margin
+        description: margin calculated as revenue minus purchase cost
+        tests:
+          - not_null
+  - name: finance_days
+    description: daily aggregated financial metrics combining transactions, revenue, costs, and margins
+    columns:
+      - name: date_date
+        description: date of the financial aggregation (primary key)
+      - name: nb_transactions
+        description: total number of transactions for the day
+        tests:
+          - not_null
+      - name: revenue
+        description: total revenue generated for the day
+        tests:
+          - not_null
+      - name: avg_basket
+        description: average basket value (revenue per transaction) for the day
+        tests:
+          - not_null
+      - name: op_margin
+        description: operational margin for the day (revenue minus all costs)
+        tests:
+          - not_null
+      - name: purchase_cost
+        description: total cost of purchased products for the day
+        tests:
+          - not_null
+      - name: shipping_fee
+        description: total shipping fees charged to customers for the day
+        tests:
+          - not_null
+      - name: logcost
+        description: total logistics costs for the day
+        tests:
+          - not_null
+      - name: nb_products_sold
+        description: total quantity of products sold for the day
+        tests:
+          - not_null
