@@ -1,3 +1,6 @@
+{{ config(
+    materialized='table'
+) }}
 WITH order_margin AS (
     SELECT *
     FROM {{ ref('int_orders_margin') }}
