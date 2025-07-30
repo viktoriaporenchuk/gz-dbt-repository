@@ -51,6 +51,23 @@ sources:
             description: internal logistics cost for shipping the order
           - name: ship_cost
             description: total cost of shipping the order
+      - name: adwords
+        identifier: raw_gz_adwords
+        description: Google Ads campaign data
+
+      - name: bing
+        identifier: raw_gz_bing
+        description: Bing Ads campaign data
+        
+      - name: criteo
+        identifier: raw_gz_criteo
+        description: Criteo Ads campaign data
+        
+      - name: facebook
+        identifier: raw_gz_facebook
+        description: Facebook Ads campaign data
+      
+
 models:
   - name: int_orders_margin
     description: margin calculation per order
@@ -199,3 +216,5 @@ models:
         description: total quantity of products sold for the day
         tests:
           - not_null
+     
+    
