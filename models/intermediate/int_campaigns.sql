@@ -5,8 +5,8 @@
 WITH adwords AS (
     SELECT
         date_date AS date,
-        campaign_id,
-        campaign_name,
+        campaign_key,
+        campaing_name,
         CAST(ads_cost AS FLOAT64) AS ads_cost,
         'adwords' AS source
     FROM {{ ref('stg_raw__adwords') }}
@@ -15,8 +15,8 @@ WITH adwords AS (
 bing AS (
     SELECT
         date_date AS date,
-        campaign_id,
-        campaign_name,
+        campaign_key,
+        campaing_name,
         CAST(ads_cost AS FLOAT64) AS ads_cost,
         'bing' AS source
     FROM {{ ref('stg_raw__bing') }}
@@ -25,8 +25,8 @@ bing AS (
 criteo AS (
     SELECT
         date_date AS date,
-        campaign_id,
-        campaign_name,
+        campaign_key,
+        campaing_name,
         CAST(ads_cost AS FLOAT64) AS ads_cost,
         'criteo' AS source
     FROM {{ ref('stg_raw__criteo') }}
@@ -35,8 +35,8 @@ criteo AS (
 facebook AS (
     SELECT
         date_date AS date,
-        campaign_id,
-        campaign_name,
+        campaign_key,
+        campaing_name,
         CAST(ads_cost AS FLOAT64) AS ads_cost,
         'facebook' AS source
     FROM {{ ref('stg_raw__facebook') }}
